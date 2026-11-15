@@ -2,6 +2,10 @@
 
 Mỗi task thêm một mục mới lên đầu file, dạng `## YYYY-MM-DD — <tên task>`.
 
+## 2026-11-15 — Skill /e2e cho Claude
+
+- Thêm `skills/e2e/SKILL.md`: hướng dẫn Claude chia yêu cầu QA thành do/check, gọi `e2e_run` một lần, xử lý bí mật, dò lỗi từng bước và mẫu báo cáo bug.
+
 ## 2026-11-15 — Tài liệu mã nguồn mở (v0.1.0)
 
 - Thêm README.md tiếng Anh; README cũ (tiếng Việt) chuyển thành README.vi.md.
