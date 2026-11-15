@@ -79,22 +79,22 @@ export class SessionManager {
   private timer: NodeJS.Timeout;
 
   constructor(
-    private create: (opts?: { runsDir?: string }) => Session,
+    private create: (opts?: { projectDir?: string }) => Session,
     private idleMs = 30 * 60_000,
   ) {
     this.timer = setInterval(() => void this.sweep(), 60_000);
     this.timer.unref();
   }
 
-  /** Tạo session mới (chưa mở trang). `runsDir`: nơi ghi kết quả, mặc định theo config. */
-  add(opts?: { runsDir?: string }): Session {
+  /** Tạo session mới (chưa mở trang). `projectDir`: dự án đang test (kết quả ở `<projectDir>/e2e-runs`, bí mật thêm từ `<projectDir>/.env.e2e`). */
+  add(opts?: { projectDir?: string }): Session {
     const session = this.create(opts);
     this.sessions.set(session.id, { session, lastUsed: Date.now() });
     return session;
   }
 
   /** Session KHÔNG được quản lý (không vào danh sách, không tự đóng): người gọi tự đóng, vd. runScenario. */
-  spawn(opts?: { runsDir?: string }): Session {
+  spawn(opts?: { projectDir?: string }): Session {
     return this.create(opts);
   }
 

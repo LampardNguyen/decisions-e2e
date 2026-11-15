@@ -138,7 +138,19 @@ npx decisions-e2e do --url https://staging.example.com --goal "Log in" --data em
     screenshots/
 ```
 
-Add `e2e-runs/` to your project's `.gitignore`.
+Add `e2e-runs/` and `.env.e2e` to your project's `.gitignore`.
+
+### Per-project secrets (`.env.e2e`)
+
+Each project under test can keep its own secrets in `<project_dir>/.env.e2e`, so you never edit the decisions-e2e `.env` when switching projects:
+
+```
+# <project_dir>/.env.e2e  (do not commit)
+E2E_SECRET_SHOP_PASSWORD=...
+E2E_SECRET_ADMIN_PASSWORD=...
+```
+
+The file is read on every `e2e_run`, `e2e_run_test`, `e2e_open` with `project_dir`, and CLI run. Its values override variables of the same name in the repo `.env`, and they apply only to that project's sessions. Keep `OPENAI_API_KEY` in the repo `.env`.
 
 ## Configuration
 
@@ -153,7 +165,7 @@ Add `e2e-runs/` to your project's `.gitignore`.
 | `E2E_STEP_SCREENSHOTS` | false | screenshot after every action |
 | `E2E_RUNS_DIR` | `<repo>/runs` | used only when no `project_dir` is given |
 | `E2E_HEADED` | true | show the browser window |
-| `E2E_SECRET_<NAME>` | — | value for `{{NAME}}` |
+| `E2E_SECRET_<NAME>` | — | value for `{{NAME}}` (repo `.env` or `<project_dir>/.env.e2e`) |
 
 ## Privacy
 

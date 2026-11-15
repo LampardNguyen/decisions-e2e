@@ -10,3 +10,4 @@ export * from "./decisions/client.js";
 export * from "./decisions/questions.js";
 export * from "./scenario.js";
 export * from "./testfile.js";
+export * from "./env.js";

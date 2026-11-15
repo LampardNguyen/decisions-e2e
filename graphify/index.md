@@ -4,7 +4,7 @@ Chỉ mục gốc. Mỗi chức năng một note, liên kết bằng `[[tên-not
 
 ## Note
 
-_(chưa có note — thêm khi phân tích xong một chức năng)_
+- [[secrets-env]] — bí mật `{{NAME}}`: nạp env (repo `.env` + `<project_dir>/.env.e2e`), thay giá trị, che khỏi output
 
 ## Gói chính (để định hướng)
 

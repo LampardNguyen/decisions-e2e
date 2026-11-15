@@ -1,7 +1,7 @@
-import { Session, SessionManager } from "@decisions-e2e/core";
+import { Session, SessionManager, withProjectEnv } from "@decisions-e2e/core";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
-import { existsSync, mkdtempSync, readFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, expect, test } from "vitest";
@@ -19,7 +19,7 @@ async function connect(scripts: Parameters<typeof scripted>[0], env: NodeJS.Proc
     if (a.op === "CLICK") d.page = snap([el(1, "link", "Logout"), el(2, "link", "Home")], { url: "http://test/home", visibleText: "Welcome" });
   });
   const { client: decisions, requests } = scripted(scripts);
-  manager = new SessionManager((o) => new Session(driver, decisions, o?.runsDir ? { ...testConfig(), runsDir: o.runsDir } : testConfig(), env));
+  manager = new SessionManager((o) => new Session(driver, decisions, o?.projectDir ? { ...testConfig(), runsDir: join(o.projectDir, "e2e-runs") } : testConfig(), withProjectEnv(o?.projectDir, env)));
   const [a, b] = InMemoryTransport.createLinkedPair();
   await createServer(manager).connect(a);
   const client = new Client({ name: "test", version: "0" });
@@ -133,6 +133,21 @@ test("e2e_run: chạy trọn kịch bản trong một lần gọi, kết quả n
   expect(out.run_dir.startsWith(join(project, "e2e-runs"))).toBe(true);
   expect(existsSync(out.report)).toBe(true);
   expect(JSON.parse(readFileSync(join(out.run_dir, "result.json"), "utf8")).passed).toBe(true);
+});
+
+test("e2e_run: placeholder lấy giá trị từ <project_dir>/.env.e2e", async () => {
+  const project = mkdtempSync(join(tmpdir(), "proj-"));
+  writeFileSync(join(project, ".env.e2e"), "E2E_SECRET_PROJ_EMAIL=qa@proj.test\n");
+  const { call } = await connect([
+    { operation: "TYPE_TEXT", type_text_target: "1" },
+    { value_key: "email" },
+    { operation: "CLICK", click_target: "3" },
+    { operation: "DONE" },
+    { check_1: "0.95" },
+  ]);
+  const r = await call("e2e_run", { project_dir: project, url: "http://test/", steps: [{ do: "Log in", data: { email: "{{PROJ_EMAIL}}" }, check: ["Welcome is shown"] }] });
+  expect(r.json()).toMatchObject({ passed: true });
+  expect(r.content.map((c) => c.text).join("")).not.toContain("qa@proj.test");
 });
 
 test("e2e_run: dừng ở bước đầu tiên không đạt, báo bước và lý do", async () => {

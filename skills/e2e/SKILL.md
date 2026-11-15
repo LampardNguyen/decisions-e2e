@@ -45,9 +45,10 @@ Quy tắc viết `check`:
 
 ## 4. Bí mật
 
-- Mật khẩu, token, OTP cố định… **luôn** viết dạng placeholder: `"password": "{{QA_PASSWORD}}"`. Server lấy giá trị thật từ env `E2E_SECRET_QA_PASSWORD` trong `.env` của decisions-e2e.
-- **Không bao giờ** gõ giá trị bí mật thật vào tool call, file test hay câu trả lời. Không đọc hay in nội dung `.env`.
-- Nếu người dùng dán mật khẩu thật vào chat: không dùng nó. Hãy bảo họ đặt vào `.env` dưới tên `E2E_SECRET_<NAME>`, rồi dùng `{{NAME}}`.
+- Mật khẩu, token, OTP cố định… **luôn** viết dạng placeholder: `"password": "{{QA_PASSWORD}}"`. Server lấy giá trị thật từ `E2E_SECRET_QA_PASSWORD`, ưu tiên file `<project_dir>/.env.e2e` của dự án đang test, sau đó tới `.env` của decisions-e2e. Mỗi trang hoặc tài khoản dùng một tên riêng, ví dụ `{{SHOP_PASSWORD}}` hay `{{ADMIN_PASSWORD}}`.
+- **Không bao giờ** gõ giá trị bí mật thật vào tool call, file test hay câu trả lời. Không đọc hay in nội dung `.env` hoặc `.env.e2e`.
+- Nếu người dùng dán mật khẩu thật vào chat: không dùng nó. Hãy bảo họ tự thêm dòng `E2E_SECRET_<NAME>=...` vào `<project_dir>/.env.e2e`, nhắc thêm `.env.e2e` vào `.gitignore` của dự án, rồi dùng `{{NAME}}`.
+- Lỗi `Thiếu biến môi trường E2E_SECRET_X`: báo người dùng thêm biến đó vào `<project_dir>/.env.e2e`. Không tự tạo file với giá trị bí mật.
 - Output có dạng `staging.***.com` (khi bí mật trùng một phần chuỗi khác) là do engine che bí mật. Đây là hành vi đúng, không phải lỗi.
 
 ## 5. Gọi `e2e_run`

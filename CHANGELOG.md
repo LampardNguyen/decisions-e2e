@@ -2,6 +2,13 @@
 
 Mỗi task thêm một mục mới lên đầu file, dạng `## YYYY-MM-DD — <tên task>`.
 
+## 2026-11-15 — Bí mật riêng từng dự án (.env.e2e)
+
+- Engine đọc thêm `<project_dir>/.env.e2e` cho mỗi session có `project_dir` (`e2e_run`, `e2e_run_test`, `e2e_open`, CLI); biến ghi đè `.env` của repo, không lẫn giữa các dự án.
+- Core: thêm `withProjectEnv` (`packages/core/src/env.ts`); `SessionManager` nhận `{ projectDir }` thay cho `{ runsDir }`.
+- Test cho `withProjectEnv` và `e2e_run` dùng placeholder từ `.env.e2e`.
+- Cập nhật README, README.vi, `.env.example`, skill `/e2e`, note `graphify/secrets-env.md`.
+
 ## 2026-11-15 — Skill /e2e cho Claude
 
 - Thêm `skills/e2e/SKILL.md`: hướng dẫn Claude chia yêu cầu QA thành do/check, gọi `e2e_run` một lần, xử lý bí mật, dò lỗi từng bước và mẫu báo cáo bug.

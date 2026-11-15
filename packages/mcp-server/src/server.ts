@@ -44,8 +44,7 @@ const sessionId = z.string().describe("session_id do e2e_open trả về");
 const projectDir = z
   .string()
   .refine(isAbsolute, "project_dir phải là đường dẫn tuyệt đối")
-  .describe("Đường dẫn TUYỆT ĐỐI tới thư mục dự án đang test (thường là thư mục làm việc hiện tại). Kết quả ghi vào <project_dir>/e2e-runs/.");
-const runsDirOf = (dir?: string) => (dir ? join(dir, "e2e-runs") : undefined);
+  .describe("Đường dẫn TUYỆT ĐỐI tới thư mục dự án đang test (thường là thư mục làm việc hiện tại). Kết quả ghi vào <project_dir>/e2e-runs/; bí mật {{NAME}} đọc thêm từ <project_dir>/.env.e2e.");
 /** Tên file an toàn từ tên test: giữ chữ (mọi ngôn ngữ), số, - và _. */
 const slug = (name: string) => name.trim().replace(/[^\p{L}\p{N}_-]+/gu, "-").replace(/^-+|-+$/g, "") || "test";
 
@@ -78,7 +77,7 @@ export function createServer(sessions: SessionManager): McpServer {
       },
     },
     tool("e2e_run", async ({ project_dir, url, steps, headed, threshold }) => {
-      const r = await runScenario(sessions.spawn({ runsDir: runsDirOf(project_dir) }), url, steps, { headed, threshold });
+      const r = await runScenario(sessions.spawn({ projectDir: project_dir }), url, steps, { headed, threshold });
       return { content: [{ type: "text", text: JSON.stringify(r, null, 1) }] };
     }),
   );
@@ -97,7 +96,7 @@ export function createServer(sessions: SessionManager): McpServer {
       },
     },
     tool("e2e_open", async ({ url, project_dir, headed, viewport }) => {
-      const session = sessions.add({ runsDir: runsDirOf(project_dir) });
+      const session = sessions.add({ projectDir: project_dir });
       try {
         const opened = await session.open(url, { headed, viewport });
         return result({ session_id: session.id, final_url: opened.url, screenshot: opened.screenshotPath }, opened.screenshotPath);
@@ -252,7 +251,7 @@ export function createServer(sessions: SessionManager): McpServer {
     tool("e2e_run_test", async ({ project_dir, file, headed, threshold }) => {
       const path = resolve(project_dir, file);
       const test = parseTestFile(readFileSync(path, "utf8"));
-      const r = await runScenario(sessions.spawn({ runsDir: runsDirOf(project_dir) }), test.url, stepsOf(test), { headed, threshold });
+      const r = await runScenario(sessions.spawn({ projectDir: project_dir }), test.url, stepsOf(test), { headed, threshold });
       return { content: [{ type: "text", text: JSON.stringify({ test: test.name || path, ...r }, null, 1) }] };
     }),
   );

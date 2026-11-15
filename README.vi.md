@@ -128,7 +128,19 @@ In JSON kết quả giống `e2e_run`. Exit code: 0 = pass, 1 = fail, 2 = sai th
     screenshots/
 ```
 
-Nên thêm `e2e-runs/` vào `.gitignore` của dự án. Các tool từng bước gọi không kèm `project_dir` thì ghi vào `E2E_RUNS_DIR` (mặc định `<repo>/runs`).
+Nên thêm `e2e-runs/` và `.env.e2e` vào `.gitignore` của dự án.
+
+### Bí mật riêng từng dự án (`.env.e2e`)
+
+Mỗi dự án đang test có thể giữ bí mật riêng trong `<project_dir>/.env.e2e`. Nhờ vậy, đổi dự án không cần sửa `.env` của decisions-e2e:
+
+```
+# <project_dir>/.env.e2e  (không commit)
+E2E_SECRET_SHOP_PASSWORD=...
+E2E_SECRET_ADMIN_PASSWORD=...
+```
+
+File được đọc mỗi lần `e2e_run`, `e2e_run_test`, `e2e_open` có `project_dir`, và mỗi lần chạy CLI. Biến trong file ghi đè biến cùng tên trong `.env` của repo, và chỉ áp dụng cho session của dự án đó. `OPENAI_API_KEY` vẫn để ở `.env` của repo. Các tool từng bước gọi không kèm `project_dir` thì ghi vào `E2E_RUNS_DIR` (mặc định `<repo>/runs`).
 
 ## Cấu hình (env)
 
@@ -143,7 +155,7 @@ Nên thêm `e2e-runs/` vào `.gitignore` của dự án. Các tool từng bướ
 | `E2E_STEP_SCREENSHOTS` | false | chụp ảnh sau mỗi bước |
 | `E2E_RUNS_DIR` | `<repo>/runs` | chỉ dùng khi không truyền `project_dir` |
 | `E2E_HEADED` | true | hiện cửa sổ trình duyệt |
-| `E2E_SECRET_<NAME>` | — | giá trị cho `{{NAME}}` |
+| `E2E_SECRET_<NAME>` | — | giá trị cho `{{NAME}}` (`.env` của repo hoặc `<project_dir>/.env.e2e`) |
 
 ## Lưu ý về dữ liệu
 
