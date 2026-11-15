@@ -1,0 +1,13 @@
+{
+  "name": "@decisions-e2e/mcp-server",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "bin": { "decisions-e2e-mcp": "./dist/index.js" },
+  "dependencies": {
+    "@decisions-e2e/core": "0.0.0",
+    "@decisions-e2e/driver-playwright": "0.0.0",
+    "@modelcontextprotocol/sdk": "1.32.2",
+    "zod": "4.6.7"
+  }
+}

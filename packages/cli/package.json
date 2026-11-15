@@ -1,0 +1,11 @@
+{
+  "name": "@decisions-e2e/cli",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "bin": { "decisions-e2e": "./dist/index.js" },
+  "dependencies": {
+    "@decisions-e2e/core": "0.0.0",
+    "@decisions-e2e/driver-playwright": "0.0.0"
+  }
+}

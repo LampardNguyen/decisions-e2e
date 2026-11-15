@@ -1,0 +1,22 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Misc fixture</title>
+<div id="menu" style="cursor:pointer"><span>Open menu</span></div>
+<div id="host"></div>
+<button style="display:none">Hidden button</button>
+<button style="visibility:hidden">Invisible button</button>
+<button style="position:absolute;top:6000px">Far below</button>
+<input type="hidden" name="csrf" value="x">
+<p><label for="up">Upload</label> <input id="up" type="file"></p>
+<p><label for="pw">PIN</label> <input id="pw" type="password" value="1234"></p>
+<table>
+  <tr><td>Blue shirt</td><td><button>Add to cart</button></td></tr>
+  <tr><td>Red hat</td><td><button>Add to cart</button></td></tr>
+</table>
+<p id="out"></p>
+<script>
+  document.getElementById("menu").addEventListener("click", () => (document.getElementById("out").textContent = "Menu opened"));
+  const root = document.getElementById("host").attachShadow({ mode: "open" });
+  root.innerHTML = "<button>Shadow action</button>";
+  root.querySelector("button").onclick = () => (document.getElementById("out").textContent = "Shadow clicked");
+</script>

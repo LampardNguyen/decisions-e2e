@@ -1,0 +1,24 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Checkout fixture</title>
+<h1>Checkout</h1>
+<p><label for="name">Full name</label> <input id="name"></p>
+<iframe name="note" src="frame-note.html" width="400" height="90"></iframe>
+<iframe id="pay" name="payment" width="400" height="90"></iframe>
+<iframe src="frame-note.html" style="display:none"></iframe>
+<p><button id="go" type="button">Pay now</button></p>
+<p id="out"></p>
+<script>
+  // ?card=<origin khác> để iframe thanh toán là cross-origin.
+  const cardOrigin = new URLSearchParams(location.search).get("card") || location.origin;
+  document.getElementById("pay").src = cardOrigin + "/frame-card.html";
+  const got = {};
+  addEventListener("message", (e) => Object.assign(got, e.data));
+  document.getElementById("go").onclick = () => {
+    const name = document.getElementById("name").value;
+    const missing = [!name && "name", !got.note && "note", !got.card && "card"].filter(Boolean);
+    document.getElementById("out").textContent = missing.length
+      ? "Missing: " + missing.join(", ")
+      : "Payment complete for " + name + " (card ending " + got.card.slice(-4) + ", note: " + got.note + ")";
+  };
+</script>

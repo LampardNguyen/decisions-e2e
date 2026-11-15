@@ -1,0 +1,27 @@
+{
+  "name": "decisions-e2e",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22.2"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "typecheck": "tsc -b && tsc --noEmit -p tsconfig.tools.json",
+    "test": "vitest run",
+    "probe": "tsx scripts/probe-decisions.ts",
+    "poc": "tsc -b && tsx examples/poc.ts",
+    "smoke:mcp": "tsc -b && tsx examples/mcp-smoke.ts"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.6",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2",
+    "vitest": "5.1.0"
+  }
+}

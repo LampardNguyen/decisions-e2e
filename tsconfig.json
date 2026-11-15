@@ -1,0 +1,4 @@
+{
+  "files": [],
+  "references": [{ "path": "packages/core" }, { "path": "packages/driver-playwright" }, { "path": "packages/mcp-server" }, { "path": "packages/cli" }]
+}

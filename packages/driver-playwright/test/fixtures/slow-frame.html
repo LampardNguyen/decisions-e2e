@@ -1,0 +1,9 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Slow frame fixture</title>
+<!-- Giống trang admin thật: click menu → iframe[main] điều hướng, rồi nội dung đổ vào sau một khoảng trễ (spinner). -->
+<button id="open">Open list</button>
+<iframe name="main" src="about:blank" width="400" height="200"></iframe>
+<script>
+  document.getElementById("open").addEventListener("click", () => (document.querySelector("iframe").src = "slow-list.html"));
+</script>

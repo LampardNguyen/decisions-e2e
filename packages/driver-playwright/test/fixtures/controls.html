@@ -1,0 +1,35 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Controls fixture</title>
+<h1>Shipping</h1>
+<p><label for="country">Country</label>
+  <select id="country"><option value="">Choose…</option><option value="vn">Vietnam</option><option value="jp">Japan</option><option value="us">United States</option></select></p>
+<p><label><input type="radio" name="speed" value="std" checked> Standard delivery</label>
+   <label><input type="radio" name="speed" value="exp"> Express delivery</label></p>
+<p><label for="city">City</label>
+  <input id="city" role="combobox" aria-expanded="false" aria-controls="list" autocomplete="off"></p>
+<div id="list" role="listbox"></div>
+<p><button id="save" type="button">Save</button></p>
+<p id="out"></p>
+<script>
+  const cities = ["Hanoi", "Ho Chi Minh City", "Hue", "Da Nang", "Osaka", "Tokyo"];
+  const city = document.getElementById("city"), list = document.getElementById("list");
+  city.addEventListener("input", () => {
+    const q = city.value.toLowerCase();
+    list.innerHTML = "";
+    for (const c of q ? cities.filter((c) => c.toLowerCase().startsWith(q)) : []) {
+      const o = document.createElement("div");
+      o.setAttribute("role", "option");
+      o.textContent = c;
+      o.style.cursor = "pointer";
+      o.onclick = () => { city.value = c; city.dataset.picked = c; list.innerHTML = ""; city.setAttribute("aria-expanded", "false"); };
+      list.append(o);
+    }
+    city.setAttribute("aria-expanded", String(list.children.length > 0));
+  });
+  document.getElementById("save").onclick = () => {
+    const speed = document.querySelector("input[name=speed]:checked").value;
+    document.getElementById("out").textContent =
+      "Saved: country=" + document.getElementById("country").value + " speed=" + speed + " city=" + (city.dataset.picked || "(not picked)");
+  };
+</script>

@@ -1,0 +1,14 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Dropdown fixture</title>
+<style>li[role=menuitem] { width: 400px; padding: 4px 8px } li a { display: inline-block; width: 60px }</style>
+<!-- Giống dropdown その他の操作 của trang admin thật: <li role=menuitem> rộng, handler gắn ở <a> nhỏ bên trong. -->
+<ul role="menu">
+  <li role="menuitem"><a href="#" id="dup">Duplicate</a></li>
+  <li role="menuitem"><a href="#" id="stop">Stop</a></li>
+</ul>
+<p id="out"></p>
+<script>
+  for (const a of document.querySelectorAll("li a"))
+    a.addEventListener("click", (e) => { e.preventDefault(); document.getElementById("out").textContent = a.id + " clicked"; });
+</script>

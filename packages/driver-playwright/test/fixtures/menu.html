@@ -1,0 +1,21 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Menu fixture</title>
+<style>.rail div { padding: 8px } .toggle { cursor: pointer; width: 24px; height: 24px; background: #ccc }</style>
+<nav class="rail">
+  <a href="#top">Top</a>
+  <div class="rail-item" id="content">Content</div>
+  <div class="rail-item">Customers</div>
+  <a id="settings" class="group"><svg width="16" height="16"><rect width="16" height="16"/></svg><span>Settings</span></a>
+  <a name="anchor"></a>
+</nav>
+<div class="toggle sidebar-toggle" id="tog"><i class="icon-hamburger"></i></div>
+<button id="close"><svg width="16" height="16"><title>Close panel</title><rect width="16" height="16"/></svg></button>
+<ul id="panel" hidden><li><a href="#coupons">Coupon list</a></li></ul>
+<p id="out"></p>
+<script>
+  const panel = document.getElementById("panel");
+  document.getElementById("tog").addEventListener("click", () => (panel.hidden = !panel.hidden));
+  document.getElementById("settings").addEventListener("click", () => (document.getElementById("out").textContent = "Settings clicked"));
+  document.getElementById("content").addEventListener("click", () => (document.getElementById("out").textContent = "Content clicked"));
+</script>
