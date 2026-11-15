@@ -2,6 +2,10 @@
 
 Mỗi task thêm một mục mới lên đầu file, dạng `## YYYY-MM-DD — <tên task>`.
 
+## 2026-11-15 — Bỏ qua .DS_Store
+
+- Thêm `.DS_Store` vào `.gitignore`.
+
 ## 2026-11-15 — Skill /e2e tự tạo .env.e2e
 
 - Skill: khi test cần `{{NAME}}` mà chưa có giá trị, Claude tự tạo/bổ sung `<project_dir>/.env.e2e` với biến rỗng (chmod 600), thêm vào `.gitignore` của dự án, rồi dừng để người dùng điền password.
