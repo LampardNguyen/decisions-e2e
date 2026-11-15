@@ -47,8 +47,47 @@ Quy tắc viết `check`:
 
 - Mật khẩu, token, OTP cố định… **luôn** viết dạng placeholder: `"password": "{{QA_PASSWORD}}"`. Server lấy giá trị thật từ `E2E_SECRET_QA_PASSWORD`, ưu tiên file `<project_dir>/.env.e2e` của dự án đang test, sau đó tới `.env` của decisions-e2e. Mỗi trang hoặc tài khoản dùng một tên riêng, ví dụ `{{SHOP_PASSWORD}}` hay `{{ADMIN_PASSWORD}}`.
 - **Không bao giờ** gõ giá trị bí mật thật vào tool call, file test hay câu trả lời. Không đọc hay in nội dung `.env` hoặc `.env.e2e`.
-- Nếu người dùng dán mật khẩu thật vào chat: không dùng nó. Hãy bảo họ tự thêm dòng `E2E_SECRET_<NAME>=...` vào `<project_dir>/.env.e2e`, nhắc thêm `.env.e2e` vào `.gitignore` của dự án, rồi dùng `{{NAME}}`.
-- Lỗi `Thiếu biến môi trường E2E_SECRET_X`: báo người dùng thêm biến đó vào `<project_dir>/.env.e2e`. Không tự tạo file với giá trị bí mật.
+- Nếu người dùng dán mật khẩu thật vào chat: không dùng nó, và không ghi nó vào file. Xử lý theo mục 4.1, rồi dùng `{{NAME}}`.
+- Lỗi `Thiếu biến môi trường E2E_SECRET_X` khi chạy: xử lý theo mục 4.1 cho biến `X`.
+
+### 4.1. Chuẩn bị `.env.e2e` khi thiếu password
+
+Làm bước này **trước khi** gọi `e2e_run` / `e2e_run_test`, nếu test có placeholder `{{NAME}}`.
+
+1. Đặt tên biến: `E2E_SECRET_<NAME>`, trong đó `<NAME>` viết HOA, chỉ gồm chữ, số và `_`, theo trang hoặc tài khoản. Ví dụ `SHOP_PASSWORD`, `ADMIN_PASSWORD`.
+2. Kiểm tra biến đã có giá trị chưa, **không in giá trị ra**:
+
+   ```bash
+   cd "<project_dir>" && for k in E2E_SECRET_SHOP_PASSWORD; do grep -qE "^$k=.+" .env.e2e 2>/dev/null && echo "$k: có" || echo "$k: thiếu"; done
+   ```
+
+   Nếu mọi biến đều "có", chạy test luôn.
+3. Nếu thiếu: **tự tạo hoặc bổ sung file**, chỉ ghi tên biến với giá trị **rỗng**:
+
+   ```bash
+   cd "<project_dir>" && touch .env.e2e && chmod 600 .env.e2e \
+     && for k in E2E_SECRET_SHOP_PASSWORD; do grep -qE "^$k=" .env.e2e || printf '%s=\n' "$k" >> .env.e2e; done
+   ```
+
+   - Không xoá, không sửa, không đọc các dòng đã có trong file.
+   - Nếu file chưa có dòng chú thích, có thể thêm một dòng đầu: `# Bí mật cho decisions-e2e — điền giá trị sau dấu =, không commit file này`.
+4. Nếu `<project_dir>` là git repo mà `.gitignore` chưa có `.env.e2e`, thêm vào:
+
+   ```bash
+   cd "<project_dir>" && { git rev-parse --is-inside-work-tree >/dev/null 2>&1 && ! grep -qxF '.env.e2e' .gitignore 2>/dev/null && printf '\n.env.e2e\n' >> .gitignore; } ; true
+   ```
+
+5. **Dừng, chưa chạy test.** Báo người dùng đường dẫn tuyệt đối của file, các biến cần điền, và nói rằng họ chỉ cần mở file, điền password sau dấu `=` rồi lưu. Ví dụ:
+
+   ```
+   Đã tạo /abs/path/project/.env.e2e (đã thêm vào .gitignore). Mở file và điền:
+     E2E_SECRET_SHOP_PASSWORD=<password trang shop>
+   Lưu xong báo mình để chạy test.
+   ```
+
+6. Khi người dùng báo đã điền, kiểm tra lại như bước 2, rồi chạy test. Không cần khởi động lại MCP, vì file được đọc lại mỗi lần chạy.
+
+Không bao giờ tự điền giá trị bí mật vào file, kể cả khi người dùng đã dán nó vào chat. Không `cat`/`grep` in nội dung file.
 - Output có dạng `staging.***.com` (khi bí mật trùng một phần chuỗi khác) là do engine che bí mật. Đây là hành vi đúng, không phải lỗi.
 
 ## 5. Gọi `e2e_run`

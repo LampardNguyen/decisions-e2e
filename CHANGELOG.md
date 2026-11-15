@@ -2,6 +2,11 @@
 
 Mỗi task thêm một mục mới lên đầu file, dạng `## YYYY-MM-DD — <tên task>`.
 
+## 2026-11-15 — Skill /e2e tự tạo .env.e2e
+
+- Skill: khi test cần `{{NAME}}` mà chưa có giá trị, Claude tự tạo/bổ sung `<project_dir>/.env.e2e` với biến rỗng (chmod 600), thêm vào `.gitignore` của dự án, rồi dừng để người dùng điền password.
+- Kiểm tra biến chỉ báo có/thiếu, không in giá trị.
+
 ## 2026-11-15 — Bí mật riêng từng dự án (.env.e2e)
 
 - Engine đọc thêm `<project_dir>/.env.e2e` cho mỗi session có `project_dir` (`e2e_run`, `e2e_run_test`, `e2e_open`, CLI); biến ghi đè `.env` của repo, không lẫn giữa các dự án.
